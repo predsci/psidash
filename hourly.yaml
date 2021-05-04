@@ -1,0 +1,20 @@
+commit:
+  identity:
+  - name
+work_log:
+  filename: WorkLog.md
+  header_depth: 2
+repo:
+  name: 'psidash'
+
+report:
+  repos:
+  - ${repo}
+
+vis:
+  frequency: '1 d'
+  plotly: # plotly keywords
+    plot:
+      output_type: div 
+      auto_open: false
+      filename: docs/WorkLog/hourly-work.html
