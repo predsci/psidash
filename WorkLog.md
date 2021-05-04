@@ -1,3 +1,6 @@
+
+## 2021-05-04 17:01:37.235238: clock-in
+
 ## 2021-05-04 15:12:51.305971: clock-out
 
 * added demo loading dash app from config
