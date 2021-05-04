@@ -69,18 +69,17 @@ from jupyter_dash import JupyterDash
 # +
 conf = OmegaConf.load('examples/demo.yaml')
 
-
 app = load_dash(conf)
 
 layout_conf = OmegaConf.to_container(conf.layout, resolve=True)
 
 app.layout = load_components(layout_conf)
 
-# callback_conf = OmegaConf.to_container(conf.callbacks, resolve=True)
+callback_conf = OmegaConf.to_container(conf.callbacks, resolve=True)
 
-# signatures = get_callbacks(app, callback_conf)
+signatures = get_callbacks(app, callback_conf)
 
-# signatures['update_range'](update_range)
+signatures['render_input'](lambda x:x)
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
@@ -89,5 +88,9 @@ if __name__ == '__main__':
 server = app.server
 
 # -
+
+callback_conf
+
+signatures
 
 

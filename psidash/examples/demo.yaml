@@ -1,9 +1,5 @@
-Div: dash_html_components.Div
-Image: dash_html_components.Img
-H1: dash_html_components.H1
-Graph: dash_core_components.Graph
-Range: dash_core_components.RangeSlider
-Dropdown: dash_core_components.Dropdown
+dcc: dash_core_components
+html: dash_html_components
 
 external_stylesheets:
   - https://codepen.io/chriddyp/pen/bWLwgP.css
@@ -19,64 +15,52 @@ app:
   suppress_callback_exceptions: True
   title: psidash demo
 
+explainer: "## PSI-Dash
+
+### Plotly Dashboard generator from PSI
+
+This demonstrates provisioning of dash layout from yaml
+"
+
 
 header:
-  class: ${Div}
+  class: ${html}.Div
   children:
-    - class: ${Div}
+    - class: ${dcc}.Markdown
+      children: ${explainer}
+      className: ten columns
+    - class: ${html}.Div
       children:
-        - class: ${Image}
+        - class: ${html}.Img
           src: assets/psi_logo.png
           width: 100
           height: 100
       className: two columns
-    - class: ${H1}
-      children: psidash demo
   className: row
 
 
-   
 content:
-  class: ${Div}
+  class: ${html}.Div
   children:
-    - class: ${Graph}
-      id: content-graph
-    - class: ${Div}
-      id: debug
-    - class: ${Dropdown}
-      id: variable-select
-      options:
-          - label: b_r
-            value: b_r
-      value: b_r
-    - class: ${Range}
-      id:
-        type: range
-        id: r
-      tooltip:
-        always_visible: False
-    - class: ${Range}
-      id:
-        type: range
-        id: theta
-      tooltip:
-        always_visible: False
-    - class: ${Range}
-      id:
-        type: range
-        id: phi
-      tooltip:
-        always_visible: False
-    - class: ${Range}
-      id:
-        type: range
-        id: time
-      tooltip:
-        always_visible: False
-  id: content
+    - class: ${dcc}.Input
+      id: user-input
+      value: enter text here
+    - class: ${html}.Div
+      id: user-output
+    - class: ${dcc}.Input
+      id: user-input-a
+      inputMode: numeric
+      value: 2
+    - class: ${dcc}.Input
+      id: user-input-b
+      inputMode: numeric
+      value: 3
+    - class: ${html}.Div
+      id: user-output-sum
 
-layout: 
-    class: ${Div}
+
+layout:
+    class: ${html}.Div
     children:
         - ${header}
         - ${content}
@@ -85,32 +69,28 @@ layout:
         padding: 5%
         
 callbacks:
-  # update_plot:
-    
-  update_range:
+  render_input:
     output:
-    - id:
-        type: range
-        id: MATCH
-      attr: min
-    - id:
-        type: range
-        id: MATCH
-      attr: max
-    - id:
-        type: range
-        id: MATCH
-      attr: step
-    - id:
-        type: range
-        id: MATCH
-      attr: marks
-    - id:
-        type: range
-        id: MATCH
-      attr: value
+    - id: user-output
+      attr: children
     input:
-    - id: variable-select
+    - id: user-input
       attr: value
+  render_sum:
+    output:
+    - id: user-output-sum
+      attr: children
+    lambda:
+      x:
+        id: user-input-a
+        attr: value
+        type: input
+      y:
+        id: user-input-b
+        attr: value
+        type: state
+      eval: x+y
+
+
  
       
