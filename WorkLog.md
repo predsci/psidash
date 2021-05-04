@@ -1,3 +1,5 @@
+## 2021-05-04 15:12:51.305971: clock-out
+
 * added demo loading dash app from config
 * running docker-compose from `report-generator/Docker/docker-compose.yaml`
 * note: predscinc should generate a `docker-compose.yaml`
