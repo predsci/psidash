@@ -1,3 +1,5 @@
+## 2021-05-05 15:06:45.258942: clock-out
+
 * ignoring dev files
 * cleaned up install
 
