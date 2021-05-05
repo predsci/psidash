@@ -1,3 +1,6 @@
+
+## 2021-05-05 13:00:16.563345: clock-in
+
 ## 2021-05-05 11:33:20.645548: clock-out
 
 * storing callbacks in namedtuple, added bootstrap
