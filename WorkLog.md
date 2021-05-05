@@ -1,3 +1,6 @@
+
+## 2021-05-05 10:38:36.543471: clock-in
+
 ## 2021-05-04 18:01:51.122513: clock-out
 
 * creating lambda signature
