@@ -1,9 +1,11 @@
 dcc: dash_core_components
 html: dash_html_components
+dbc: dash_bootstrap_components
 
 external_stylesheets:
   - https://codepen.io/chriddyp/pen/bWLwgP.css
   - https://www.w3schools.com/w3css/4/w3.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
 
 external_scripts:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
@@ -47,13 +49,13 @@ content:
       value: enter text here
     - class: ${html}.Div
       id: user-output
-    - class: ${dcc}.Input
+    - class: ${dbc}.Input
       id: user-input-a
-      inputMode: numeric
+      type: number
       value: 2
-    - class: ${dcc}.Input
+    - class: ${dbc}.Input
       id: user-input-b
-      inputMode: numeric
+      type: number
       value: 3
     - class: ${html}.Div
       id: user-output-sum
@@ -80,16 +82,14 @@ callbacks:
     output:
     - id: user-output-sum
       attr: children
-    lambda:
-      x:
-        id: user-input-a
-        attr: value
-        type: input
-      y:
-        id: user-input-b
-        attr: value
-        type: state
-      eval: x+y
+    input:
+    - id: user-input-a
+      attr: value
+    state:
+    - id: user-input-b
+      attr: value
+
+
 
 
  

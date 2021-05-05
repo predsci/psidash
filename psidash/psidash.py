@@ -2,6 +2,8 @@ from omegaconf import OmegaConf
 from importlib import import_module
 from dash.dependencies import Input, Output, State, MATCH, ALL
 
+from collections import namedtuple
+
 
 # +
 def load_class(component):
@@ -11,7 +13,7 @@ def load_class(component):
     try:
         return getattr(import_module(module_name), class_name)
     except:
-        print('something wrong with {}'.format(component))
+        raise ImportError('cannot import {} from {}'.format(class_name, module_name))
 
 def load_components(conf_):
     if 'class' in conf_:
@@ -40,7 +42,7 @@ def get_match_type(id_):
 
 def get_callbacks(app, conf):
     # get the callback signatures
-    signatures = dict()
+    signatures = {}
     component_types = dict(output=Output, input=Input, state=State)
     for k, v in conf.items():
         signature = []
@@ -51,6 +53,7 @@ def get_callbacks(app, conf):
                     id_ = get_match_type(_['id'])
                     signature.append(component_types[type_](id_, _['attr']))
         signatures[k] = app.callback(*signature)
+    signatures = namedtuple('Signatures', signatures)(**signatures)
     return signatures
 
 def load_dash(conf):
@@ -77,19 +80,29 @@ app.layout = load_components(layout_conf)
 
 callback_conf = OmegaConf.to_container(conf.callbacks, resolve=True)
 
-signatures = get_callbacks(app, callback_conf)
+demo = get_callbacks(app, callback_conf)
+# -
 
-signatures['render_input'](lambda x:x)
+# The configuration includes the callback signatures needed to decorate the functions that control our app's behavior.
 
+# +
+# demo.render_input?
+
+# +
+demo.render_input(lambda x:x)
+
+@demo.render_sum
+def render_sum(x, y):
+    return x + y
+
+
+# +
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
 
 
 server = app.server
-
 # -
-
-callback_conf
 
 signatures
 
