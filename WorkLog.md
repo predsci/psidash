@@ -1,3 +1,4 @@
+* cleaned up install
 
 ## 2021-05-05 13:00:16.563345: clock-in
 

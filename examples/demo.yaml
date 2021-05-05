@@ -1,0 +1,141 @@
+dcc: dash_core_components
+html: dash_html_components
+dbc: dash_bootstrap_components
+
+external_stylesheets:
+  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://www.w3schools.com/w3css/4/w3.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+
+app:
+  class: jupyter_dash.JupyterDash
+  external_stylesheets: ${external_stylesheets}
+  external_scripts: ${external_scripts}
+  # suppress_callback_exceptions: True
+  title: psidash demo
+
+explainer: "## PSI-Dash
+
+### Plotly Dashboard generator from PSI
+
+This demonstrates provisioning of dash app, components, layout, and callback signatures from yaml
+"
+
+
+header:
+  class: ${html}.Div
+  children:
+    - class: ${dcc}.Markdown
+      children: ${explainer}
+      className: ten columns
+    - class: ${html}.Div
+      children:
+        - class: ${html}.Img
+          src: assets/psi_logo.png
+          width: 100
+          height: 100
+      className: two columns
+  className: row
+
+
+input_a:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: Input A
+        - class: ${dbc}.Input
+          id: user-input-a
+          type: number
+          value: 3
+operator:
+  class: ${dbc}.Col
+  width: 1
+  children:
+    - class: ${dbc}.Label
+      children: Operator
+    - class: ${dcc}.Dropdown
+      id: operator
+      clearable: False
+      options:
+        - label: +
+          value: plus
+        - label: '-'
+          value: minus
+        - label: x
+          value: multiply
+        - label: ÷
+          value: divide
+      value: plus
+
+input_b:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: State B
+        - class: ${dbc}.Input
+          id: user-input-b
+          type: number
+          value: 3
+
+          
+result:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: Result
+        - class: ${dbc}.Alert
+          color: primary
+          id: result
+
+arithmetic:
+  class: ${html}.Div
+  children:
+    - class: ${dbc}.Row
+      form: True
+      children:
+        - ${input_a}
+        - ${operator}
+        - ${input_b}
+        - ${result}
+
+
+layout:
+    class: ${html}.Div
+    children:
+        - ${header}
+        - ${arithmetic}
+    className: w3-container
+    style:
+        padding: 5%
+        
+callbacks:
+  compute:
+    output:
+    - id: result
+      attr: children
+    input:
+    - id: user-input-a
+      attr: value
+    - id: operator
+      attr: value
+    state:
+    - id: user-input-b
+      attr: value
+
+
+
+
+ 
+      

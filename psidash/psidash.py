@@ -5,6 +5,10 @@ from dash.dependencies import Input, Output, State, MATCH, ALL
 from collections import namedtuple
 
 
+def load_conf(conf_file):
+    return OmegaConf.to_container(OmegaConf.load('demo.yaml'), resolve=True)
+
+
 # +
 def load_class(component):
     _ = component['class'].split('.')
@@ -57,53 +61,6 @@ def get_callbacks(app, conf):
     return signatures
 
 def load_dash(conf):
-    app_conf = OmegaConf.to_container(conf.app, resolve=True)
-    dash_class = load_class(app_conf)
-    kwargs = {k:app_conf[k] for k in app_conf if k not in ['class']}
+    dash_class = load_class(conf)
+    kwargs = {k:conf[k] for k in conf if k not in ['class']}
     return dash_class(**kwargs)
-
-
-# -
-
-# # Demo
-
-from jupyter_dash import JupyterDash
-
-# +
-conf = OmegaConf.load('examples/demo.yaml')
-
-app = load_dash(conf)
-
-layout_conf = OmegaConf.to_container(conf.layout, resolve=True)
-
-app.layout = load_components(layout_conf)
-
-callback_conf = OmegaConf.to_container(conf.callbacks, resolve=True)
-
-demo = get_callbacks(app, callback_conf)
-# -
-
-# The configuration includes the callback signatures needed to decorate the functions that control our app's behavior.
-
-# +
-# demo.render_input?
-
-# +
-demo.render_input(lambda x:x)
-
-@demo.render_sum
-def render_sum(x, y):
-    return x + y
-
-
-# +
-if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
-
-
-server = app.server
-# -
-
-signatures
-
-
