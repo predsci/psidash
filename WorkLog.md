@@ -1,3 +1,5 @@
+## 2021-05-06 00:46:45.402471: clock-out
+
 * updating readme
 * removing notebook in favor of markdown
 * syncing markdown
