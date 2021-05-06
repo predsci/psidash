@@ -56,8 +56,10 @@ if __name__ == '__main__':
 Here is how we could generate the same app from yaml.
 
 ```python
-from psidash.psidash import load_dash, load_conf, load_components
+from psidash.psidash import load_dash, load_conf, load_components, get_callbacks
+```
 
+```python
 conf = load_conf('examples/plotly_intro.yaml')
 app = load_dash(__name__, conf['app'])
 app.layout = load_components(conf['layout'])
@@ -66,7 +68,7 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
 ```
 
-![](plotly_intro.png)
+![](examples/plotly_intro.png)
 
 
 `examples/plotly_intro.yaml`
@@ -109,3 +111,44 @@ layout:
     
 ```
 
+
+
+## Callbacks
+
+
+
+```python
+cd examples
+```
+
+```python
+conf = load_conf('demo.yaml')
+
+# app keywords, (external_style_sheets, external_scripts, etc.) are defined in yaml
+app = load_dash(__name__, conf['app'])
+
+# components and ids in yaml
+app.layout = load_components(conf['layout'])
+
+#load callback signatures into named tuple
+demo = get_callbacks(app, conf['callbacks'])
+
+@demo.compute
+def render_sum(x, op, y):
+    if op == 'plus':
+        return x + y
+    elif op == 'minus':
+        return x - y
+    elif op == 'multiply':
+        return x*y
+    elif op == 'divide':
+        return x/y
+
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
+
+
+server = app.server
+```
+
+![](examples/psidash_demo.png)
