@@ -1,18 +1,3 @@
----
-jupyter:
-  jupytext:
-    formats: ipynb,md
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.11.1
-  kernelspec:
-    display_name: Python 3
-    language: python
-    name: python3
----
-
 ## psi-dash
 
 A yaml-based generator for plotly dashboards.
@@ -63,6 +48,9 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
 ```
 
+![](plotly_intro.png)
+
+
 Here is how we could generate the same app from yaml.
 
 ```python
@@ -111,9 +99,4 @@ layout:
         y:  [2, 4, 5]
       layout:
         barmode: group
-```
-
-
-```yaml
-
 ```

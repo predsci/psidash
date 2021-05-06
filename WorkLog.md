@@ -1,3 +1,4 @@
+* removing notebook in favor of markdown
 * syncing markdown
 * layout demo matching official plotly docs
 
