@@ -55,21 +55,6 @@ if __name__ == '__main__':
 
 Here is how we could generate the same app from yaml.
 
-```python
-from psidash.psidash import load_dash, load_conf, load_components, get_callbacks
-```
-
-```python
-conf = load_conf('examples/plotly_intro.yaml')
-app = load_dash(__name__, conf['app'])
-app.layout = load_components(conf['layout'])
-
-if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
-```
-
-![](examples/plotly_intro.png)
-
 <!-- #region -->
 <details><summary> Click to expand examples/plotly_intro.yaml </summary>
 
@@ -113,6 +98,22 @@ layout:
 ```
 </details>
 <!-- #endregion -->
+
+```python
+from psidash.psidash import load_dash, load_conf, load_components, get_callbacks
+```
+
+```python
+conf = load_conf('examples/plotly_intro.yaml')
+app = load_dash(__name__, conf['app'])
+app.layout = load_components(conf['layout'])
+
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
+```
+
+![](examples/plotly_intro.png)
+
 
 ## Callbacks
 

@@ -1,3 +1,4 @@
+* moving conf up
 ## 2021-05-06 10:18:08.736571: clock-out
 
 * moving conf into details
