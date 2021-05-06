@@ -1,3 +1,4 @@
+* syncing markdown
 * layout demo matching official plotly docs
 
 ## 2021-05-05 22:30:52.154170: clock-in
