@@ -70,8 +70,9 @@ if __name__ == '__main__':
 
 ![](examples/plotly_intro.png)
 
+<!-- #region -->
+<details><summary> Click to expand examples/plotly_intro.yaml </summary>
 
-`examples/plotly_intro.yaml`
 
 ```yaml
 
@@ -110,12 +111,156 @@ layout:
     
     
 ```
-
-
+</details>
+<!-- #endregion -->
 
 ## Callbacks
 
+Callback signatures are also defined in the yaml. This allows one to separate the dashboard logic from the callback implementation.
 
+The example below uses dash_bootstrap_components.
+
+Thanks to OmegaConf, sections may be referenced in bracket notation `{}`.
+
+
+<details>  <summary>Click here to expand examples/demo.yaml </summary> 
+
+```yaml
+
+dcc: dash_core_components
+html: dash_html_components
+dbc: dash_bootstrap_components
+
+external_stylesheets:
+  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://www.w3schools.com/w3css/4/w3.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
+
+app:
+  class: jupyter_dash.JupyterDash
+  external_stylesheets: ${external_stylesheets}
+  title: psidash demo
+
+explainer: "## PSI-Dash
+
+### Plotly Dashboard generator from PSI
+
+This demonstrates provisioning of dash app, components, layout, and callback signatures from yaml
+"
+
+
+header:
+  class: ${html}.Div
+  children:
+    - class: ${dcc}.Markdown
+      children: ${explainer}
+      className: ten columns
+    - class: ${html}.Div
+      children:
+        - class: ${html}.Img
+          src: assets/psi_logo.png
+          width: 100
+          height: 100
+      className: two columns
+  className: row
+
+
+input_a:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: Input A
+        - class: ${dbc}.Input
+          id: user-input-a
+          type: number
+          value: 3
+operator:
+  class: ${dbc}.Col
+  width: 1
+  children:
+    - class: ${dbc}.Label
+      children: Operator
+    - class: ${dcc}.Dropdown
+      id: operator
+      clearable: False
+      options:
+        - label: +
+          value: plus
+        - label: '-'
+          value: minus
+        - label: x
+          value: multiply
+        - label: ÷
+          value: divide
+      value: plus
+
+input_b:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: State B
+        - class: ${dbc}.Input
+          id: user-input-b
+          type: number
+          value: 3
+
+          
+result:
+  class: ${dbc}.Col
+  width: 3
+  children:
+    - class: ${dbc}.FormGroup
+      children:
+        - class: ${dbc}.Label
+          children: Result
+        - class: ${dbc}.Alert
+          color: primary
+          id: result
+
+arithmetic:
+  class: ${html}.Div
+  children:
+    - class: ${dbc}.Row
+      form: True
+      children:
+        - ${input_a}
+        - ${operator}
+        - ${input_b}
+        - ${result}
+
+
+layout:
+    class: ${html}.Div
+    children:
+        - ${header}
+        - ${arithmetic}
+    className: w3-container
+    style:
+        padding: 5%
+        
+callbacks:
+  compute:
+    output:
+    - id: result
+      attr: children
+    input:
+    - id: user-input-a
+      attr: value
+    - id: operator
+      attr: value
+    state:
+    - id: user-input-b
+      attr: value
+```
+    
+</details>
 
 ```python
 cd examples
