@@ -1,16 +1,21 @@
-## psi-dash
+<!-- #region -->
+# psi-dash
 
 A yaml-based generator for plotly dashboards.
 
-### Motivation
+## Motivation
 
-The standard way to build dash applications is to define the entire application in python.
+The standard way to build dash applications is to define the entire application in python. However, this approach is error-prone:
 
-This quickly becomes unweidly for large applications.
+* component ids need to be synchronized with callback signatures
+* cosmetic changes are indistinguishable from functional changes
+* collaboration between ui and dev is encumbered 
 
-Psidash allows you to define most ui elements, callback signatures, and app keywords in yaml.
+
+Many of the above problems may be avoided by moving ui elements, callback dependencies, stylesheets, etc into yaml. Only the callbacks need to be written in python.
 
 Consider the following layout (from plotly's website):
+<!-- #endregion -->
 
 ```python
 from jupyter_dash import JupyterDash
@@ -48,9 +53,6 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
 ```
 
-![](plotly_intro.png)
-
-
 Here is how we could generate the same app from yaml.
 
 ```python
@@ -64,9 +66,13 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
 ```
 
-cat `examples/plotly_intro.yaml`
+![](plotly_intro.png)
+
+
+`examples/plotly_intro.yaml`
 
 ```yaml
+
 dcc: dash_core_components
 html: dash_html_components
 
@@ -99,4 +105,7 @@ layout:
         y:  [2, 4, 5]
       layout:
         barmode: group
+    
+    
 ```
+
