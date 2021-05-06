@@ -6,7 +6,7 @@ from collections import namedtuple
 
 
 def load_conf(conf_file):
-    return OmegaConf.to_container(OmegaConf.load('demo.yaml'), resolve=True)
+    return OmegaConf.to_container(OmegaConf.load(conf_file), resolve=True)
 
 
 # +
@@ -60,7 +60,7 @@ def get_callbacks(app, conf):
     signatures = namedtuple('Signatures', signatures)(**signatures)
     return signatures
 
-def load_dash(conf):
+def load_dash(name, conf):
     dash_class = load_class(conf)
     kwargs = {k:conf[k] for k in conf if k not in ['class']}
-    return dash_class(**kwargs)
+    return dash_class(name, **kwargs)

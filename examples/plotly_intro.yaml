@@ -1,0 +1,32 @@
+dcc: dash_core_components
+html: dash_html_components
+
+external_stylesheets:
+  - https://codepen.io/chriddyp/pen/bWLwgP.css
+
+app:
+  class: jupyter_dash.JupyterDash
+  external_stylesheets: ${external_stylesheets}
+  title: psidash demo
+
+layout:
+  class: ${html}.Div
+  children:
+  - class: ${html}.H1
+    children: Hello Dash
+  - class: ${html}.Div
+    children: Dash A web application framework for Python.
+  - class: ${dcc}.Graph
+    id: example-graph
+    figure:
+      data:
+      - type: bar
+        name: SF
+        x: ["Apples", "Oranges", "Bananas"]
+        y: [4, 1, 2]
+      - type: bar
+        name: Montreal
+        x: ["Apples", "Oranges", "Bananas"]
+        y:  [2, 4, 5]
+      layout:
+        barmode: group
