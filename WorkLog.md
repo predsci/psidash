@@ -1,3 +1,4 @@
+* adding dot config
 
 ## 2021-05-07 15:34:16.593435: clock-in
 
