@@ -18,6 +18,12 @@ Consider the following layout (from plotly's website):
 <!-- #endregion -->
 
 ```python
+%load_ext autoreload
+
+%autoreload 2
+```
+
+```python
 from jupyter_dash import JupyterDash
 import dash
 import dash_core_components as dcc
@@ -268,6 +274,14 @@ cd examples
 ```
 
 ```python
+conf['layout']['children'][0]
+```
+
+```python
+conf['layout']['children'][0]
+```
+
+```python
 conf = load_conf('demo.yaml')
 
 # app keywords, (external_style_sheets, external_scripts, etc.) are defined in yaml
@@ -291,8 +305,7 @@ def render_sum(x, op, y):
         return x/y
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
-
+    app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
 
 server = app.server
 ```
