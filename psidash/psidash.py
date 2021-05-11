@@ -5,23 +5,53 @@ from dash.dependencies import Input, Output, State, MATCH, ALL
 from collections import namedtuple
 
 
+# ## Configuration
+
+# We use OmegaConf to resolve yaml. This allows users to reference variables in `${}` notation
+
 def load_conf(conf_file):
     return OmegaConf.to_container(OmegaConf.load(conf_file), resolve=True)
 
+# ## Layout
+#
+# We want to support the following layout:
+#
+# ```yaml
+# # import namespaces may be referenced by classes
+# import:
+#     dcc: dash_core_components
+#
+# header: # a custom variable
+#     dcc.H4('header')
+#     
+# layout: # a special variable we'll look for
+#     dcc.Div:
+#         children:
+#             - ${header} # OmegaConf will resolve
+#             - dcc.Div('hi')
+# ```
 
-# +
-def load_class(component):
+
+def load_class(component, module_names = None):
     """accepts dictionary or str"""
     try: 
         if isinstance(component, dict):
+            raise NotImplementedError('removing')
             class_name = component['class']       
         else:
             class_name = component
 
     except:
         raise ImportError('could not parse class from {}'.format(component))
-        
+
     class_parts = class_name.split('.')
+        
+    if module_names is not None:
+        module_base = class_parts[0]
+        for _ in module_names:
+            if _ == module_base:
+                class_parts[0] = module_names[_]
+        
     module_name = '.'.join(class_parts[:-1])
     class_name = class_parts[-1]
 
@@ -30,27 +60,42 @@ def load_class(component):
     except:
         raise ImportError('cannot import {} from {}'.format(class_name, module_name))
 
-def load_components(conf_):
-    """class based component loader"""
-    if 'class' in conf_:
-        class_ = load_class(conf_)
-        kwargs = {k:conf_[k] for k in conf_ if k not in ['class', 'children']}
-        children = conf_.get('children')
-        if children is not None:
-            if isinstance(children, str):
-                pass
-            else:
-                children_ = []
-                for child in children:
-                    children_.append(load_components(child))
-                children = children_
-        return class_(children=children, **kwargs)
+
+# +
+def load_components(conf, module_names = None):
+    if isinstance(conf, dict):
+        for k,v in conf.items():
+            if '.' in k:
+                class_ = load_class(k, module_names)
+                if isinstance(v, dict):
+                    kwargs = dict()
+                    for k_, v_ in v.items():
+                        if k_ == 'children':
+                            v_ = load_components(v['children'], module_names)
+                        kwargs[k_] = v_
+                    return class_(**kwargs)
+                elif isinstance(v, list):
+                    return class_(*v)
+                else:
+                    return class_(v)
+    elif isinstance(conf, list):
+        children = [load_components(child, module_names) for child in conf]
+        return children
     else:
-        return conf_
-        # raise IOError('conf has no class {}'.format(list(conf_)))
+        return conf
+    
+def test_nested():
+    load_components({'html.Div':
+                  {'children':
+                   [{'html.H4':'Hello Title'},
+                    {'html.Div': 'there'}]
+                  }
+                 },
+                 {'html': 'dash_html_components'} # imports
+                )
 
 
-
+# +
 def get_match_type(id_):
     """Look for match key in callback id property
     see https://dash.plotly.com/pattern-matching-callbacks
@@ -83,87 +128,30 @@ def get_callbacks(app, conf):
     signatures = namedtuple('Signatures', signatures)(**signatures)
     return signatures
 
-def load_dash(name, conf):
-    dash_class = load_class(conf)
-    kwargs = {k:conf[k] for k in conf if k not in ['class']}
-    return dash_class(name, **kwargs)
+def assign_callbacks(signatures, conf):
+    for k, v in conf.items():
+        if 'callback' in v:
+            func = load_class(v['callback'])
+            getattr(signatures, k)(func)
 
-# +
-            
-
-        
-
-def is_dot_config(conf_):
-    if isinstance(conf_, dict):
-        if len(conf_) == 1:
-            for name, kwargs in conf_.items():
-                if '.' in name:
-                    return True
-    return False
-
-def instantiate_conf(conf_):
-    for class_name, kwargs in conf_.items():
-        class_ = load_class(class_name)
-        if isinstance(kwargs, dict):
-            print('found dict {}'.format(kwargs))
-            return class_(**instantiate_conf(kwargs))
-        else:
-            print('not a dict {}'.format(kwargs))
-            return class_(kwargs)
-
-def load_dot_components(conf_):
-    """dot based component loader"""
-    if is_dot_config(conf_):
-        print('found dot config')
-        for name, val in conf_.items():
-            class_ = load_class(name)
-            if isinstance(val, dict):
-                print('{} has dict val'.format(name))
-                if is_dot_config(val):
-                    obj = load_dot_components(val)
-                else:
-                    print('{} not a dot config'.format(val))
-                    obj = class_(**val)
-                return obj
-            elif isinstance(val, list):
-                print('{} list val'.format(name))
-                return class_(*val)
-            else:
-                print('found {}'.format(type(val)))
-                return class_(val)
-                
-    else:
-        print("not a dot config")
-
-    if isinstance(conf_, list):
-        print('found list')
-        return [load_dot_components(_) for _ in conf_]
-
-    
-
-# +
-def test_dot_conf_dict():
-    greeting = {
-        'dash_html_components.Div': dict(id = 'you_guys', children=['hey', 'you'])}
-    return load_dot_components(greeting)
-
-test_dot_conf_dict()
+def load_dash(name, conf, module_names = None):
+    for class_, kwargs in conf.items():
+        dash_class = load_class(class_, module_names)
+        return dash_class(name, **kwargs)
 
 
 # -
 
-def test_dot_conf_list():
-    return load_dot_components({'dash_html_components.Div': ['hey', 'you']})
-test_dot_conf_list()
+def load_app(name, filename):
+    """Load the complete application - layout, signatures, callbacks"""
+    conf = load_conf(filename)
+    app = load_dash(name, conf['app'], conf.get('import'))
+    app.layout = load_components(conf['layout'], conf.get('import'))
 
-
-def test_dot_conf_nested():
-    return load_dot_components(
-        {'dash_html_components.Div': {'children': ['hey', {'dash_html_components.Div':['you']}]}}
-    )
-test_dot_conf_nested()
-
-is_dot_config({'dash_html_components.Div':['you']})
-
+    if 'callbacks' in conf:
+        callbacks = get_callbacks(app, conf['callbacks'])
+        assign_callbacks(callbacks, conf['callbacks'])
+    
+    return app
 
 

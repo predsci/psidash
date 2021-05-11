@@ -121,33 +121,106 @@ if __name__ == '__main__':
 ![](examples/plotly_intro.png)
 
 
+# Usage
+
+<!-- #region -->
+
+
+<details>
+<summary> examples/basic.yaml </summary>
+    
+```yaml
+
+import:
+  html: dash_html_components
+  dcc: dash_core_components
+
+app:
+  jupyter_dash.JupyterDash:
+    title: psidash basic
+
+
+layout:
+    html.Div:
+      children:
+          - html.H4: Hello
+          - dcc.Input:
+              value: there
+              id: my-input
+          - html.H5:
+              id: my-output
+
+callbacks:
+  pass_through:
+    input:
+      - id: my-input
+        attr: value
+    output:
+      - id: my-output
+        attr: children
+    callback: examples.mycallbacks.pass_through
+    
+```
+ 
+</details>
+
+<details>
+    <summary> examples/mycallbacks.py </summary>
+    
+```python  
+    
+def pass_through(*args):
+    return args
+```
+	
+</details>
+
+<!-- #endregion -->
+
+```python
+from psidash import load_app
+
+app = load_app('examples/basic.yaml')
+
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
+```
+
+![](examples/basic.gif)
+
+
 ## Callbacks
 
-Callback signatures are also defined in the yaml. This allows one to separate the dashboard logic from the callback implementation.
+Callback signatures are also defined in the yaml. Use the `callback` keyword to point to a specific function that implements your callback. This allows one to separate the dashboard logic from the callback implementation.
 
-The example below uses dash_bootstrap_components.
+Notes:
 
-Thanks to OmegaConf, sections may be referenced in bracket notation `{}`.
+* The example below uses dash_bootstrap_components.
+* Thanks to OmegaConf, sections may be referenced in bracket notation `{}`.
 
 
 <details>  <summary>Click here to expand examples/demo.yaml </summary> 
 
 ```yaml
-
-dcc: dash_core_components
-html: dash_html_components
-dbc: dash_bootstrap_components
+import:
+  dcc: dash_core_components
+  html: dash_html_components
+  dbc: dash_bootstrap_components
 
 external_stylesheets:
   - https://codepen.io/chriddyp/pen/bWLwgP.css
   - https://www.w3schools.com/w3css/4/w3.css
   - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
 
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
 
 app:
-  class: jupyter_dash.JupyterDash
-  external_stylesheets: ${external_stylesheets}
-  title: psidash demo
+  jupyter_dash.JupyterDash:
+    external_stylesheets: ${external_stylesheets}
+    external_scripts: ${external_scripts}
+    # suppress_callback_exceptions: True
+    title: psidash demo
 
 explainer: "## PSI-Dash
 
@@ -158,99 +231,95 @@ This demonstrates provisioning of dash app, components, layout, and callback sig
 
 
 header:
-  class: ${html}.Div
-  children:
-    - class: ${dcc}.Markdown
-      children: ${explainer}
-      className: ten columns
-    - class: ${html}.Div
-      children:
-        - class: ${html}.Img
-          src: assets/psi_logo.png
-          width: 100
-          height: 100
-      className: two columns
-  className: row
+  dash_html_components.Div:
+    children:
+      - dcc.Markdown:
+          children: ${explainer}
+          className: ten columns
+      - html.Div:
+          children:
+            - html.Img:
+                src: assets/psi_logo.png
+                width: 100
+                height: 100
+          className: two columns
+    className: row
 
 
 input_a:
-  class: ${dbc}.Col
-  width: 3
-  children:
-    - class: ${dbc}.FormGroup
-      children:
-        - class: ${dbc}.Label
-          children: Input A
-        - class: ${dbc}.Input
-          id: user-input-a
-          type: number
-          value: 3
+  dbc.Col:
+    width: 3
+    children:
+      - dbc.FormGroup:
+          children:
+            - dbc.Label: Input A
+            - dbc.Input:
+                id: user-input-a
+                type: number
+                value: 3
 operator:
-  class: ${dbc}.Col
-  width: 1
-  children:
-    - class: ${dbc}.Label
-      children: Operator
-    - class: ${dcc}.Dropdown
-      id: operator
-      clearable: False
-      options:
-        - label: +
+  dbc.Col:
+    width: 1
+    children:
+      - dbc.Label: Operator
+      - dcc.Dropdown:
+          id: operator
+          clearable: False
+          options:
+            - label: +
+              value: plus
+            - label: '-'
+              value: minus
+            - label: x
+              value: multiply
+            - label: ÷
+              value: divide
           value: plus
-        - label: '-'
-          value: minus
-        - label: x
-          value: multiply
-        - label: ÷
-          value: divide
-      value: plus
 
 input_b:
-  class: ${dbc}.Col
-  width: 3
-  children:
-    - class: ${dbc}.FormGroup
-      children:
-        - class: ${dbc}.Label
-          children: State B
-        - class: ${dbc}.Input
-          id: user-input-b
-          type: number
-          value: 3
+  dbc.Col:
+    width: 3
+    children:
+      - dbc.FormGroup:
+          children:
+            - dbc.Label: State B
+            - dbc.Input:
+                id: user-input-b
+                type: number
+                value: 3
 
           
 result:
-  class: ${dbc}.Col
-  width: 3
-  children:
-    - class: ${dbc}.FormGroup
-      children:
-        - class: ${dbc}.Label
-          children: Result
-        - class: ${dbc}.Alert
-          color: primary
-          id: result
+  dbc.Col:
+    width: 3
+    children:
+      - dbc.FormGroup:
+          children:
+            - dbc.Label: Result
+            - dbc.Alert:
+                color: primary
+                id: result
 
 arithmetic:
-  class: ${html}.Div
-  children:
-    - class: ${dbc}.Row
-      form: True
-      children:
-        - ${input_a}
-        - ${operator}
-        - ${input_b}
-        - ${result}
+  html.Div:
+    children:
+      - dbc.Row:
+          form: True
+          children:
+            - ${input_a}
+            - ${operator}
+            - ${input_b}
+            - ${result}
 
 
 layout:
-    class: ${html}.Div
-    children:
-        - ${header}
-        - ${arithmetic}
-    className: w3-container
-    style:
-        padding: 5%
+    html.Div:
+      children:
+          - ${header}
+          - ${arithmetic}
+      className: w3-container
+      style:
+          padding: 5%
         
 callbacks:
   compute:
@@ -265,44 +334,18 @@ callbacks:
     state:
     - id: user-input-b
       attr: value
+    callback: mycallbacks.render_sum
+
 ```
     
 </details>
 
 ```python
-cd examples
+cd examples # need to be next to assets/
 ```
 
 ```python
-conf['layout']['children'][0]
-```
-
-```python
-conf['layout']['children'][0]
-```
-
-```python
-conf = load_conf('demo.yaml')
-
-# app keywords, (external_style_sheets, external_scripts, etc.) are defined in yaml
-app = load_dash(__name__, conf['app'])
-
-# components and ids in yaml
-app.layout = load_components(conf['layout'])
-
-#load callback signatures into named tuple
-demo = get_callbacks(app, conf['callbacks'])
-
-@demo.compute
-def render_sum(x, op, y):
-    if op == 'plus':
-        return x + y
-    elif op == 'minus':
-        return x - y
-    elif op == 'multiply':
-        return x*y
-    elif op == 'divide':
-        return x/y
+app = load_app(__name__, 'demo.yaml')
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
