@@ -14,7 +14,7 @@ The standard way to build dash applications is to define the entire application 
 
 Many of the above problems may be avoided by moving ui elements, callback dependencies, stylesheets, etc into yaml. Only the callbacks need to be written in python.
 
-Consider the following layout (from plotly's website):
+Consider the following layout (adapted from plotly's website):
 <!-- #endregion -->
 
 ```python
@@ -59,60 +59,52 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
 ```
 
-Here is how we could generate the same app from yaml.
+Here is how we could generate the same app from yaml:
 
 <!-- #region -->
-<details><summary> Click to expand examples/plotly_intro.yaml </summary>
+<details><summary> examples/plotly_intro.yaml </summary>
 
 
 ```yaml
-
-dcc: dash_core_components
-html: dash_html_components
-
-external_stylesheets:
-  - https://codepen.io/chriddyp/pen/bWLwgP.css
+import:
+  dcc: dash_core_components
+  html: dash_html_components
 
 app:
-  class: jupyter_dash.JupyterDash
-  external_stylesheets: ${external_stylesheets}
-  title: psidash demo
+  jupyter_dash.JupyterDash:
+    external_stylesheets:
+      - https://codepen.io/chriddyp/pen/bWLwgP.css
+    title: psidash demo
 
 layout:
-  class: ${html}.Div
-  children:
-  - class: ${html}.H1
-    children: Hello Dash
-  - class: ${html}.Div
-    children: Dash A web application framework for Python.
-  - class: ${dcc}.Graph
-    id: example-graph
-    figure:
-      data:
-      - type: bar
-        name: SF
-        x: ["Apples", "Oranges", "Bananas"]
-        y: [4, 1, 2]
-      - type: bar
-        name: Montreal
-        x: ["Apples", "Oranges", "Bananas"]
-        y:  [2, 4, 5]
-      layout:
-        barmode: group
-    
+  html.Div:
+    children:
+    - html.H1: Hello Dash
+    - html.Div: Dash A web application framework for Python.
+    - dcc.Graph:
+        id: example-graph
+        figure:
+          data:
+          - type: bar
+            name: SF
+            x: ["Apples", "Oranges", "Bananas"]
+            y: [4, 1, 2]
+          - type: bar
+            name: Montreal
+            x: ["Apples", "Oranges", "Bananas"]
+            y:  [2, 4, 5]
+          layout:
+            barmode: group
+
     
 ```
 </details>
 <!-- #endregion -->
 
 ```python
-from psidash.psidash import load_dash, load_conf, load_components, get_callbacks
-```
+from psidash.psidash import load_app
 
-```python
-conf = load_conf('examples/plotly_intro.yaml')
-app = load_dash(__name__, conf['app'])
-app.layout = load_components(conf['layout'])
+app = load_app(__name__, 'examples/plotly_intro.yaml')
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
@@ -122,6 +114,10 @@ if __name__ == '__main__':
 
 
 # Usage
+
+
+`psidash.load_app` will load your application's layout and callback signatures directly from yaml.
+If you have defined callback behaviors, psidash will decorate them with your callback signatures.
 
 <!-- #region -->
 
@@ -191,7 +187,7 @@ if __name__ == '__main__':
 
 ## Callbacks
 
-Callback signatures are also defined in the yaml. Use the `callback` keyword to point to a specific function that implements your callback. This allows one to separate the dashboard logic from the callback implementation.
+Callback signatures are also defined in the yaml. Use the `callback` keyword to point to a specific function that implements your callback. This way, we can **separate the dashboard logic from the callback implementation.**
 
 Notes:
 

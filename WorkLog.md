@@ -1,3 +1,4 @@
+* using new class dict syntax
 
 ## 2021-05-11 17:07:02.202455: clock-in
 
