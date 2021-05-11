@@ -1,3 +1,5 @@
+## 2021-05-11 16:55:49.763731: clock-out
+
 * improved conf syntax, removed superfluous class keyword
 
 ## 2021-05-11 14:15:40.659822: clock-in
