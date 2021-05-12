@@ -1,3 +1,6 @@
+
+## 2021-05-12 17:12:47.414452: clock-in
+
 ## 2021-05-11 17:15:33.523594: clock-out
 
 * using new class dict syntax
