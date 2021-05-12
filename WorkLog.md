@@ -1,3 +1,4 @@
+* adding command line tool
 
 ## 2021-05-12 17:12:47.414452: clock-in
 

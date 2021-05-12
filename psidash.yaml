@@ -1,0 +1,28 @@
+import:
+  html: dash_html_components
+  dcc: dash_core_components
+
+app:
+  jupyter_dash.JupyterDash:
+    title: psidash basic
+
+
+layout:
+  html.Div:
+    children:
+        - html.H4: Hello
+        - dcc.Input:
+            value: there
+            id: my-input
+        - html.H5:
+            id: my-output
+
+callbacks:
+  pass_through:
+    input:
+      - id: my-input
+        attr: value
+    output:
+      - id: my-output
+        attr: children
+    callback: examples.mycallbacks.pass_through

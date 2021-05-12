@@ -1,0 +1,24 @@
+
+psidash_output: psidash_output
+
+verbose: 1
+
+import:
+  dcc: dash_core_components
+  html: dash_html_components
+  dbc: dash_bootstrap_components
+
+external_stylesheets:
+  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://www.w3schools.com/w3css/4/w3.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
+external_scripts:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+
+app:
+  jupyter_dash.JupyterDash:
+    external_stylesheets: ${external_stylesheets}
+    external_scripts: ${external_scripts}
+    # suppress_callback_exceptions: True
+    title: psidash
