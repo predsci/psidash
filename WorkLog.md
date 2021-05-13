@@ -1,3 +1,5 @@
+## 2021-05-13 17:37:43.499985: clock-out
+
 * skipping hydra for hot reloading
 
 * this works, but needs interval to refresh `gunicorn psidash.cli.main:server -b 0.0.0.0:8050 --reload --reload-extra-file psidash.yaml`
