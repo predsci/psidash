@@ -1,3 +1,6 @@
+
+## 2021-05-13 15:56:01.161331: clock-in
+
 ## 2021-05-12 18:29:35.791931: clock-out
 
 * adding command line tool
