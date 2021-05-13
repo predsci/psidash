@@ -1,3 +1,19 @@
+* skipping hydra for hot reloading
+
+* this works, but needs interval to refresh `gunicorn psidash.cli.main:server -b 0.0.0.0:8050 --reload --reload-extra-file psidash.yaml`
+* allowed generation of server variable outside of main loop
+* merging doesn't work with dot keywords. Example after merge:
+
+```yaml
+  dash.Dash:
+    title: psidash basic
+  jupyter_dash.JupyterDash:
+    external_scripts: ${external_scripts}
+    external_stylesheets: ${external_stylesheets}
+    title: psidash
+```
+
+`dash.Dash` contents won't replace jupyter_dash.JupyterDash
 
 ## 2021-05-13 15:56:01.161331: clock-in
 

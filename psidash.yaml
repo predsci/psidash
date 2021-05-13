@@ -3,19 +3,20 @@ import:
   dcc: dash_core_components
 
 app:
-  jupyter_dash.JupyterDash:
-    title: psidash basic
-
-
+  dash.Dash:
+    title: psidash
 layout:
   html.Div:
     children:
-        - html.H4: Hello
+        - html.H4: Hello! Are you there? Yes I am.
         - dcc.Input:
-            value: there
+            value: jest?
             id: my-input
         - html.H5:
             id: my-output
+    className: w3-container
+    style:
+        padding: 5%
 
 callbacks:
   pass_through:
@@ -26,3 +27,12 @@ callbacks:
       - id: my-output
         attr: children
     callback: examples.mycallbacks.pass_through
+
+run_server:
+  host: '0.0.0.0'
+  port: 8050
+  extra_files:
+    - psidash.yaml
+  debug: True
+
+verbose: 1
