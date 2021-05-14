@@ -1,7 +1,14 @@
-<!-- #region -->
+
 # psi-dash
 
 A yaml-based generator for plotly dashboards.
+
+
+## Install
+
+```console
+pip install git+https://github.com/predsci/psidash.git
+```
 
 ## Motivation
 
@@ -12,7 +19,7 @@ The standard way to build dash applications is to define the entire application 
 * collaboration between ui and dev is encumbered 
 
 
-Many of the above problems may be avoided by moving ui elements, callback dependencies, stylesheets, etc into yaml. Only the callbacks need to be written in python.
+Many of the above problems may be avoided by moving ui elements, callback dependencies, stylesheets, etc into yaml. Only the callbacks need to be written in python (even then you don't actually need to use callback decorators!)
 
 Consider the following layout (adapted from plotly's website):
 <!-- #endregion -->
