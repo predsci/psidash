@@ -1,3 +1,6 @@
+
+## 2021-05-14 15:14:36.851582: clock-in
+
 ## 2021-05-13 17:37:43.499985: clock-out
 
 * skipping hydra for hot reloading
