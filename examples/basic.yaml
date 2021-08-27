@@ -10,12 +10,15 @@ app:
 layout:
     html.Div:
       children:
-          - html.H4: Hello
-          - dcc.Input:
-              value: there
-              id: my-input
-          - html.H5:
-              id: my-output
+      - html.H4:
+          children: Hello Dashboard
+          style:
+            color: blue 
+      - dcc.Input:
+          value: there
+          id: my-input
+      - html.H5:
+          id: my-output
 
 callbacks:
   pass_through:
@@ -25,5 +28,5 @@ callbacks:
     output:
       - id: my-output
         attr: children
-    callback: examples.mycallbacks.pass_through
+    callback: mycallbacks.pass_through
 

@@ -1,3 +1,5 @@
+* cleaning up examples
+
 ## 2021-05-14 15:18:26.617027: clock-out
 
 * added install instructions

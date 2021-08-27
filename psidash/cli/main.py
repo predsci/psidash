@@ -60,7 +60,6 @@ else:
     # find the configuration file
     print('loading conf from {}'.format(os.getcwd()))
     print(__name__)
-    print('for real?')
     config_file = 'psidash.yaml'
     if path.exists(config_file):
         print('found psidash')
@@ -71,8 +70,6 @@ else:
 
 # entrypoint for package installer
 def entry():
-    print('i have entered from entry')
-    # main()
     app.run_server(**conf['run_server'])
 
 
