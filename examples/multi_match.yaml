@@ -1,0 +1,65 @@
+# https://dash.plotly.com/pattern-matching-callbacks
+
+import:
+  html: dash_html_components
+  dcc: dash_core_components
+
+app:
+  jupyter_dash.JupyterDash:
+    title: dynamic callbacks
+
+layout:
+    html.Div:
+      children:
+      - html.H4:
+          children: Matching dynamic callbacks
+      - dcc.Dropdown:
+          id: workflow
+          options:
+            - label: city
+              value: city
+            - label: state
+              value: state
+          value: city
+      - html.Button:
+          id: dynamic-add-filter
+          children: Add Filter
+          n_clicks: 0
+      - html.Div:
+          id: dynamic-dropdown-container
+          children: []
+
+callbacks:
+  display_dropdowns:
+    input:
+      - id: dynamic-add-filter
+        attr: n_clicks
+    state:
+      - id: workflow
+        attr: value
+      - id: dynamic-dropdown-container
+        attr: children
+    output:
+      - id: dynamic-dropdown-container
+        attr: children
+    callback: mycallbacks.display_dropdowns
+
+  render:
+    input:
+      - id:
+          type: dynamic-dropdown
+          index: MATCH
+        attr: value
+    state:
+      - id:
+          type: dynamic-dropdown
+          index: MATCH
+        attr: id
+    output:
+      - id:
+          type: dynamic-output
+          index: MATCH
+        attr: children
+    callback: mycallbacks.display_output
+
+
