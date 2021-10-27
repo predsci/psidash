@@ -1,3 +1,6 @@
+
+## 2021-10-27 00:40:37.039513: clock-in
+
 ## 2021-10-27 00:34:33.876537: clock-out
 
 * allow other id keys to use MATCH and ALL
