@@ -26,7 +26,14 @@ layout:
           children: Add Filter
           n_clicks: 0
       - html.Div:
-          id: dynamic-dropdown-container
+          id:
+            workflow: city
+            type: dynamic-dropdown-container
+          children: []
+      - html.Div:
+          id:
+            workflow: state
+            type: dynamic-dropdown-container
           children: []
 
 callbacks:
@@ -37,10 +44,14 @@ callbacks:
     state:
       - id: workflow
         attr: value
-      - id: dynamic-dropdown-container
+      - id:
+          workflow: MATCH
+          type: dynamic-dropdown-container
         attr: children
     output:
-      - id: dynamic-dropdown-container
+      - id:
+          workflow: MATCH
+          type: dynamic-dropdown-container
         attr: children
     callback: mycallbacks.display_dropdowns
 

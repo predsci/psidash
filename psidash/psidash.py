@@ -102,9 +102,14 @@ def get_match_type(id_):
     """
     match_types = dict(MATCH=MATCH, ALL=ALL)
     if isinstance(id_, dict):
-        type_id = id_.get('id')
-        if type_id in match_types:
-            id_['id']=match_types[type_id]
+        # check all values and look for matches
+        new_ids = {}
+        for k, v in id_.items():
+            if v in match_types:
+                new_ids[k] = match_types[v]
+            else:
+                new_ids[k] = v
+        return new_ids
     return id_
 
 def get_callbacks(app, conf):
