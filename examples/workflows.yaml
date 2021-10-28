@@ -1,0 +1,75 @@
+# https://dash.plotly.com/pattern-matching-callbacks
+
+import:
+  html: dash_html_components
+  dcc: dash_core_components
+
+app:
+  jupyter_dash.JupyterDash:
+    title: dynamic callbacks
+
+layout:
+  html.Div:
+    children:
+      - html.Button:
+          id:
+            interaction-type: button
+            index: 1
+          children: workflow button 1
+          n_clicks: 0
+      - html.Button:
+          id:
+            interaction-type: button
+            index: 2
+          children: workflow button 2
+          n_clicks: 0
+      - html.Details:
+          id:
+            workflow-type: my-output
+            index: 1
+          open: True
+          style:
+            color: black
+          children:
+            - html.Summary: summary 1
+            - html.Div: inside
+      - html.Details:
+          id:
+            workflow-type: my-output
+            index: 2
+          open: True
+          style:
+            color: black
+          children:
+            - html.Summary: summary 2
+            - html.Div: inside
+      - dcc.Store:
+          id: workflow-list-store
+          data: no data?
+
+
+callbacks:
+  show_workflow_summary:
+    input:
+      - id:
+          interaction-type: button
+          index: MATCH
+        attr: n_clicks
+    output:
+      - id:
+          workflow-type: my-output
+          index: MATCH
+        attr: open
+      - id:
+          workflow-type: my-output
+          index: MATCH
+        attr: style
+      - id:
+          workflow-type: my-output
+          index: MATCH
+        attr: children
+    # state:
+    #   - id: workflow-list-store
+    #     attr: data
+    callback: mycallbacks.show_workflow_summary
+

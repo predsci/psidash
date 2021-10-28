@@ -64,3 +64,19 @@ def display_dropdowns(n_clicks, workflow, children):
 
 def display_output(value, id):
     return html.Div('Dropdown {} = {}'.format(id['index'], value))
+
+
+def show_workflow_summary(n_clicks):
+    # print(n_clicks, data)
+    is_open = n_clicks % 2 == 0
+    if n_clicks %2:
+        style = dict(color= 'red')
+    else:
+        style = dict(color='blue')
+    children = [
+        html.Summary("number of children:"),
+        html.Div("{} children!".format(n_clicks))]
+    return is_open, style, children
+
+
+
