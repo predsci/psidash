@@ -1,3 +1,6 @@
+
+## 2021-10-27 19:14:16.294791: clock-in
+
 ## 2021-10-27 14:06:40.275888: clock-out
 
 * troubleshooting muiltiple attribute issue
