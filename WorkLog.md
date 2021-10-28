@@ -1,3 +1,5 @@
+## 2021-10-27 20:49:37.945847: clock-out
+
 * multi attribute match
 
 ## 2021-10-27 19:14:16.294791: clock-in
