@@ -3,73 +3,111 @@
 import:
   html: dash_html_components
   dcc: dash_core_components
+  dbc: dash_bootstrap_components
+
+external_stylesheets:
+  - https://codepen.io/chriddyp/pen/bWLwgP.css
+  - https://www.w3schools.com/w3css/4/w3.css
+  - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
 
 app:
   jupyter_dash.JupyterDash:
     title: dynamic callbacks
+    external_stylesheets: ${external_stylesheets}
 
 layout:
   html.Div:
     children:
-      - html.Button:
-          id:
-            interaction-type: button
-            index: 1
-          children: workflow button 1
-          n_clicks: 0
-      - html.Button:
-          id:
-            interaction-type: button
-            index: 2
-          children: workflow button 2
-          n_clicks: 0
-      - html.Details:
-          id:
-            workflow-type: my-output
-            index: 1
-          open: True
-          style:
-            color: black
+      - dbc.Card:
           children:
-            - html.Summary: summary 1
-            - html.Div: inside
-      - html.Details:
-          id:
-            workflow-type: my-output
-            index: 2
-          open: True
+          - dcc.Tabs:
+              id: tabs
+              children:
+                - dcc.Tab:
+                    label: Tab 1
+                    value: '1'
+                - dcc.Tab:
+                    label: Tab 2
+                    value: '2'
+              value: '1' # must be a string
+          - html.Div:
+              id: workflow-summary
+              children: empty
           style:
-            color: black
+            width: 18rem
+      - dbc.Card:
           children:
-            - html.Summary: summary 2
-            - html.Div: inside
+          - html.Div:
+              id:
+                type: function-area
+                id: 1
+              style:
+                display: block
+                # display: none # or 'block' to reveal
+              children:
+                - html.Div:
+                    id:
+                      type: workflow-functions
+                      id: 1
+                    children: no children yet for 1
+          - html.Div:
+              id:
+                type: function-area
+                id: 2
+              style:
+                display: block
+                # display: none # or 'block' to reveal
+              children:
+                - html.Div:
+                    id:
+                      type: workflow-functions
+                      id: 2
+                    children: no children yet for 2
+          style:
+            width: 18rem
       - dcc.Store:
           id: workflow-list-store
-          data: no data?
-
+          data:
+            functions-1:
+              - f(x) = x**2-x-1
+              - f(y) = cos(y)
+            functions-2:
+              - f(y) = sin(y)
+              - f(g) = g**2
 
 callbacks:
   show_workflow_summary:
     input:
+      - id: tabs
+        attr: value
+    output:
+      - id: workflow-summary
+        attr: children
+    callback: mycallbacks.show_workflow_summary
+  show_workflow_functions:
+    input:
+      - id: tabs
+        attr: value
+    output:
+      - id: 
+          type: function-area
+          id: ALL
+        attr: style
+    callback: mycallbacks.show_workflow_functions
+  update_workflow_functions:
+    input:
       - id:
-          interaction-type: button
-          index: MATCH
-        attr: n_clicks
+          type: function-area
+          id: MATCH
+        attr: style
     output:
       - id:
-          workflow-type: my-output
-          index: MATCH
-        attr: open
-      - id:
-          workflow-type: my-output
-          index: MATCH
-        attr: style
-      - id:
-          workflow-type: my-output
-          index: MATCH
+          type: workflow-functions
+          id: MATCH
         attr: children
-    # state:
-    #   - id: workflow-list-store
-    #     attr: data
-    callback: mycallbacks.show_workflow_summary
+    state:
+       - id: workflow-list-store
+         attr: data
+    callback: mycallbacks.update_workflow_functions
 

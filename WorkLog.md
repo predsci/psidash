@@ -1,3 +1,168 @@
+* answering issue 1
+
+> so In my case id type of both the element can not be same. otherwise for there will be error.
+
+Other keywords in the `id` dictionary may be different, as long as the keyword connected to `MATCH` is the same. In the example below, all ids use the `index` keyword, but they have different `type` keywords:
+
+```yaml
+input:
+  - id:
+      type: custom-workflow
+      index: MATCH
+    attr: value
+output:
+  - id:
+      type: workflow-summary
+      index: MATCH
+    attr: children
+  - id:
+      type: function-area
+      index: MATCH
+    attr: style
+  - id:
+      type: function-list
+      index: MATCH
+    attr: children
+```
+
+I have updated the workflows.yaml in this repo to be better match your use case: a tabs component that triggers a summary render, a style update on a function wrapper, which triggers updates to function lists. You should be able to run it like this:
+
+```sh
+cd examples
+python workflows.py
+```
+
+<details>
+  <summary> Click here to see the full layout </summary>
+
+```yaml
+layout:
+  html.Div:
+    children:
+      - dbc.Card:
+          children:
+          - dcc.Tabs:
+              id: tabs
+              children:
+                - dcc.Tab:
+                    label: Tab 1
+                    value: '1'
+                - dcc.Tab:
+                    label: Tab 2
+                    value: '2'
+              value: '1' # must be a string
+          - html.Div:
+              id: workflow-summary
+              children: empty
+          style:
+            width: 18rem
+      - dbc.Card:
+          children:
+          - html.Div:
+              id:
+                type: function-area
+                id: 1
+              style:
+                display: block
+                # display: none # or 'block' to reveal
+              children:
+                - html.Div:
+                    id:
+                      type: workflow-functions
+                      id: 1
+                    children: no children yet for 1
+          - html.Div:
+              id:
+                type: function-area
+                id: 2
+              style:
+                display: block
+                # display: none # or 'block' to reveal
+              children:
+                - html.Div:
+                    id:
+                      type: workflow-functions
+                      id: 2
+                    children: no children yet for 2
+          style:
+            width: 18rem
+      - dcc.Store:
+          id: workflow-list-store
+          data:
+            functions-1:
+              - f(x) = x**2-x-1
+              - f(y) = cos(y)
+            functions-2:
+              - f(y) = sin(y)
+              - f(g) = g**2
+
+```
+</details>
+
+I've split things up into multiple callbacks
+
+```yaml
+  show_workflow_summary:
+    input:
+      - id: tabs
+        attr: value
+    output:
+      - id: workflow-summary
+        attr: children
+    callback: mycallbacks.show_workflow_summary
+```
+
+This one simply updates a single workflow summary div based on which tab is currently active.
+
+```yaml
+  show_workflow_functions:
+    input:
+      - id: tabs
+        attr: value
+    output:
+      - id: 
+          type: function-area
+          id: ALL
+        attr: style
+    callback: mycallbacks.show_workflow_functions
+```
+This is a bit more complex: it updates all elements with `type: function-area` at the same time. However, inside the `mycallbacks.show_workflow_functions` we check to see which of those outputs needs to be visible:
+
+```python
+    for _ in dash.callback_context.outputs_list:
+        if _['id']['id'] == int(tab_id):
+            styles.append(dict(display='block'))
+        else:
+            styles.append(dict(display='none'))
+```
+
+Finally, the function lists are updated by matching with their parent div based on its visibility:
+
+```yaml
+  update_workflow_functions:
+    input:
+      - id:
+          type: function-area
+          id: MATCH
+        attr: style
+    output:
+      - id:
+          type: workflow-functions
+          id: MATCH
+        attr: children
+    state:
+       - id: workflow-list-store
+         attr: data
+    callback: mycallbacks.update_workflow_functions
+```
+and here we check if the parent is visible before updating the children:
+```python
+def update_workflow_functions(style, workflow_state):    
+    if style['display'] == 'none':
+        raise PreventUpdate
+```
+
+
 
 ## 2021-11-01 11:12:14.258405: clock-in
 

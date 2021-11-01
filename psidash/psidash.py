@@ -106,10 +106,13 @@ def get_match_type(id_):
         new_ids = {}
         for k, v in id_.items():
             if v in match_types:
+                # print('found match type {}'.format(v))
                 new_ids[k] = match_types[v]
             else:
                 new_ids[k] = v
         return new_ids
+    elif id_ in match_types:
+        return match_types[id_]
     return id_
 
 def get_callbacks(app, conf):

@@ -1,6 +1,8 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.exceptions import PreventUpdate
+import dash
+import json
 
 def pass_through(*args):
 	return args
@@ -65,18 +67,43 @@ def display_dropdowns(n_clicks, workflow, children):
 def display_output(value, id):
     return html.Div('Dropdown {} = {}'.format(id['index'], value))
 
-
-def show_workflow_summary(n_clicks):
-    # print(n_clicks, data)
-    is_open = n_clicks % 2 == 0
-    if n_clicks %2:
-        style = dict(color= 'red')
+def get_triggered():
+    """retrieve id of the triggered element"""
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        button_id = 'No clicks yet'
     else:
-        style = dict(color='blue')
-    children = [
-        html.Summary("number of children:"),
-        html.Div("{} children!".format(n_clicks))]
-    return is_open, style, children
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    return json.loads(button_id)
+
+
+def show_workflow_summary(tab_id):
+    workflow_summary = "This is the summary for {}".format(tab_id)
+    return workflow_summary
+
+def show_workflow_functions(tab_id):
+    styles = list()
+    for _ in dash.callback_context.outputs_list:
+        if _['id']['id'] == int(tab_id):
+            styles.append(dict(display='block'))
+        else:
+            styles.append(dict(display='none'))
+    return styles
+
+def update_workflow_functions(style, workflow_state):
+    if style['display'] == 'none':
+        raise PreventUpdate
+
+    function_area = get_triggered()
+
+    function_key = 'functions-{}'.format(function_area['id'])
+    function_children =[]
+    if function_key in workflow_state:
+        for _ in workflow_state[function_key]:
+            function_children.append(html.Div(_))
+
+    return function_children
+
 
 
 
