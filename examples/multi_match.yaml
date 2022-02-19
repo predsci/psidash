@@ -1,9 +1,8 @@
 # https://dash.plotly.com/pattern-matching-callbacks
 
 import:
-  html: dash_html_components
-  dcc: dash_core_components
-
+  dcc: dash.dcc
+  html: dash.html
 app:
   jupyter_dash.JupyterDash:
     title: dynamic callbacks

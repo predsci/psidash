@@ -1,6 +1,6 @@
 import:
-  dcc: dash_core_components
-  html: dash_html_components
+  dcc: dash.dcc
+  html: dash.html
   dbc: dash_bootstrap_components
 
 external_stylesheets:

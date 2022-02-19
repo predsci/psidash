@@ -1,6 +1,6 @@
 import:
-  html: dash_html_components
-  dcc: dash_core_components
+  dcc: dash.dcc
+  html: dash.html
 
 app:
   jupyter_dash.JupyterDash:
