@@ -74,9 +74,9 @@ Here is how we could generate the same app from yaml:
 
 ```yaml
 import:
-  dcc: dash_core_components
-  html: dash_html_components
-
+  dcc: dash.dcc
+  html: dash.html
+  
 app:
   jupyter_dash.JupyterDash:
     external_stylesheets:
@@ -102,8 +102,6 @@ layout:
             y:  [2, 4, 5]
           layout:
             barmode: group
-
-    
 ```
 </details>
 <!-- #endregion -->
@@ -135,8 +133,8 @@ If you have defined callback behaviors, psidash will decorate them with your cal
 ```yaml
 
 import:
-  html: dash_html_components
-  dcc: dash_core_components
+  dcc: dash.dcc
+  html: dash.html
 
 app:
   jupyter_dash.JupyterDash:
@@ -146,12 +144,15 @@ app:
 layout:
     html.Div:
       children:
-          - html.H4: Hello
-          - dcc.Input:
-              value: there
-              id: my-input
-          - html.H5:
-              id: my-output
+      - html.H4:
+          children: Hello Dashboard
+          style:
+            color: blue 
+      - dcc.Input:
+          value: there
+          id: my-input
+      - html.H5:
+          id: my-output
 
 callbacks:
   pass_through:
@@ -161,7 +162,7 @@ callbacks:
     output:
       - id: my-output
         attr: children
-    callback: examples.mycallbacks.pass_through
+    callback: mycallbacks.pass_through
     
 ```
  
@@ -206,8 +207,8 @@ Notes:
 
 ```yaml
 import:
-  dcc: dash_core_components
-  html: dash_html_components
+  dcc: dash.dcc
+  html: dash.html
   dbc: dash_bootstrap_components
 
 external_stylesheets:
@@ -290,8 +291,7 @@ input_b:
                 id: user-input-b
                 type: number
                 value: 3
-
-          
+                
 result:
   dbc.Col:
     width: 3
