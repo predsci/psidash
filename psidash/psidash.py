@@ -119,6 +119,7 @@ def get_callbacks(app, conf):
     # get the callback signatures
     signatures = {}
     component_types = dict(output=Output, input=Input, state=State)
+    callback_kwargs = {}
     for k, v in conf.items():
         signature = []
         for type_ in 'output', 'input', 'state':
@@ -132,7 +133,11 @@ def get_callbacks(app, conf):
                         raise
 
                     signature.append(component_types[type_](id_, _['attr']))
-        signatures[k] = app.callback(*signature)
+        callback_kw = 'prevent_initial_call'
+        prevent_initial_call = v.get(callback_kw)
+        if prevent_initial_call is not None:
+            callback_kwargs[callback_kw] = prevent_initial_call
+        signatures[k] = app.callback(*signature, **callback_kwargs)
     signatures = namedtuple('Signatures', signatures)(**signatures)
     return signatures
 

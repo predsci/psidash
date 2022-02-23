@@ -1,3 +1,4 @@
+* adding prevent_initial_callback keyword
 * readme consistent with updated yamls
 * importing from dash to avoid deprication warning
 ## 2021-11-01 14:45:42.555332: clock-out
