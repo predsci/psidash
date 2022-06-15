@@ -3,10 +3,14 @@ import:
   html: dash.html
   
 app:
-  jupyter_dash.JupyterDash:
+  dash.Dash:
     external_stylesheets:
       - https://codepen.io/chriddyp/pen/bWLwgP.css
     title: psidash demo
+  run:
+    extra_files:
+      - plotly_intro.yaml
+      - plotly_intro.py
 
 layout:
   html.Div:
@@ -19,11 +23,11 @@ layout:
           data:
           - type: bar
             name: SF
-            x: ["Apples", "Oranges", "Bananas"]
+            x: ["Apples", "Limes", "Bananas"]
             y: [4, 1, 2]
           - type: bar
             name: Montreal
-            x: ["Apples", "Oranges", "Bananas"]
+            x: ["Apples", "Limes", "Bananas"]
             y:  [2, 4, 5]
           layout:
             barmode: group

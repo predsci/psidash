@@ -1,5 +1,5 @@
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.exceptions import PreventUpdate
 import dash
 import json
@@ -21,6 +21,7 @@ def display_dropdowns(n_clicks, workflow, children):
     """create stateful dynamic dropdowns
     see Simple Example with MATCH https://dash.plotly.com/pattern-matching-callbacks
     """
+    print(n_clicks, workflow, children)
     if workflow == 'city':
         new_element = html.Div([
             dcc.Dropdown(

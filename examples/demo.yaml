@@ -27,7 +27,7 @@ This demonstrates provisioning of dash app, components, layout, and callback sig
 
 
 header:
-  dash_html_components.Div:
+  html.Div:
     children:
       - dcc.Markdown:
           children: ${explainer}
@@ -46,13 +46,11 @@ input_a:
   dbc.Col:
     width: 3
     children:
-      - dbc.FormGroup:
-          children:
-            - dbc.Label: Input A
-            - dbc.Input:
-                id: user-input-a
-                type: number
-                value: 3
+    - dbc.Label: Input A
+    - dbc.Input:
+        id: user-input-a
+        type: number
+        value: 3
 operator:
   dbc.Col:
     width: 1
@@ -76,30 +74,25 @@ input_b:
   dbc.Col:
     width: 3
     children:
-      - dbc.FormGroup:
-          children:
-            - dbc.Label: State B
-            - dbc.Input:
-                id: user-input-b
-                type: number
-                value: 3
+    - dbc.Label: State B
+    - dbc.Input:
+        id: user-input-b
+        type: number
+        value: 3
                 
 result:
   dbc.Col:
     width: 3
     children:
-      - dbc.FormGroup:
-          children:
-            - dbc.Label: Result
-            - dbc.Alert:
-                color: primary
-                id: result
+    - dbc.Label: Result
+    - dbc.Alert:
+        color: primary
+        id: result
 
 arithmetic:
   html.Div:
     children:
       - dbc.Row:
-          form: True
           children:
             - ${input_a}
             - ${operator}
