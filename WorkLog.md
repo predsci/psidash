@@ -1,3 +1,4 @@
+* docker setup, mathjax debugging
 
 ## 2022-10-21 10:15:09.136092: clock-in: T-15m 
 

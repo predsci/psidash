@@ -1,3 +1,4 @@
+<!-- #region -->
 
 # psi-dash
 
@@ -6,7 +7,7 @@ A yaml-based generator for plotly dashboards.
 
 ## Install
 
-```console
+```
 pip install git+https://github.com/predsci/psidash.git
 ```
 
@@ -17,7 +18,7 @@ The standard way to build dash applications is to define the entire application 
 * component ids need to be synchronized with callback signatures
 * cosmetic changes are indistinguishable from functional changes
 * collaboration between ui and dev is encumbered 
-
+<!-- #endregion -->
 
 Many of the above problems may be avoided by moving ui elements, callback dependencies, stylesheets, etc into yaml. Only the callbacks need to be written in python (even then you don't actually need to use callback decorators!)
 
@@ -25,20 +26,14 @@ Consider the following layout (adapted from plotly's website):
 <!-- #endregion -->
 
 ```python
-%load_ext autoreload
-
-%autoreload 2
-```
-
-```python
-from jupyter_dash import JupyterDash
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
+import jupyter_dash
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = JupyterDash(__name__, external_stylesheets=external_stylesheets)
+app = jupyter_dash.JupyterDash(__name__, external_stylesheets=external_stylesheets)
 
 
 app.layout = html.Div(children=[
@@ -63,7 +58,7 @@ app.layout = html.Div(children=[
 ])
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
+    app.run_server(host='0.0.0.0', port=8050, debug=True)
 ```
 
 Here is how we could generate the same app from yaml:
@@ -112,7 +107,7 @@ from psidash.psidash import load_app
 app = load_app(__name__, 'examples/plotly_intro.yaml')
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
+    app.run_server(host='0.0.0.0', port=8050, debug=True)
 ```
 
 ![](examples/plotly_intro.png)
@@ -182,9 +177,15 @@ def pass_through(*args):
 <!-- #endregion -->
 
 ```python
+# make sure callbacks are installed or in path
+import sys
+sys.path.append('examples') 
+```
+
+```python
 from psidash import load_app
 
-app = load_app('examples/basic.yaml')
+app = load_app(__name__, 'examples/basic.yaml')
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='inline', debug=True)
@@ -201,6 +202,7 @@ Notes:
 
 * The example below uses dash_bootstrap_components.
 * Thanks to OmegaConf, sections may be referenced in bracket notation `{}`.
+* As of `dash 0.22.0`, static files, such as the [Predictive Sciences](https://www.predsci.com/portal/home.php) logo can be hosted from the assets/ directory
 
 
 <details>  <summary>Click here to expand examples/demo.yaml </summary> 
@@ -344,7 +346,7 @@ callbacks:
 </details>
 
 ```python
-cd examples # need to be next to assets/
+cd examples # need to be located next to assets/ directory when app is loaded
 ```
 
 ```python
@@ -354,6 +356,64 @@ if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
 
 server = app.server
+```
+
+### Loading External CSS/JS
+
+Often there is javascript that needs to be loaded into the client before the rest of the app.
+Such scripts may be included in the `app` section of your yaml:
+
+```yaml
+app:
+  dash.Dash:
+    external_scripts:
+      - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML
+    suppress_callback_exceptions: True
+```
+
+```python
+from psidash import load_app
+app = load_app(__name__, 'examples/markdown_test.yaml')
+
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0', port=8050, mode='external', debug=True)
+
+```
+
+```python
+from psidash import load_conf, load_dash, load_components
+import flask
+
+conf = load_conf('examples/markdown_test.yaml')
+
+server = flask.Flask(__name__) # define flask app.server
+
+conf['app']['server'] = server
+
+app = load_dash(__name__, conf['app'], conf.get('import'))
+
+app.layout = load_components(conf['layout'], conf.get('import'))
+
+application = app.server
+
+if 'callbacks' in conf:
+    callbacks = get_callbacks(app, conf['callbacks'])
+    assign_callbacks(callbacks, conf['callbacks'])
+
+run_server = conf.get('app.run_server', {})
+
+if __name__ == '__main__':
+    app.run_server(**run_server)
+```
+
+```python
+conf['app']
+```
+
+```python
+%load_ext autoreload
+
+%autoreload 2
 ```
 
 ![](examples/psidash_demo.png)

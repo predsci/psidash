@@ -1,0 +1,39 @@
+version: "3.7"
+# version: '2.4'
+
+services:
+  psidash:
+    build:
+      context: .
+    image: psidash
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: /psidash
+    ports:
+      - "8051:8050"
+    working_dir: /psidash/examples
+    command:
+      - python
+      - /psidash/examples/basic.py
+      
+  psidash-dev:
+    build:
+      context: .
+    image: psidash
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: /psidash
+    ports:
+      - "8888:8888"
+      - "8050:8050"
+    working_dir: /psidash
+    command:
+      - jupyter
+      - notebook
+      - /psidash
+      - --port=8888
+      - --no-browser
+      - --ip=0.0.0.0
+      - --allow-root

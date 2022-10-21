@@ -1,7 +1,6 @@
 import:
-  html: dash_html_components
-  dcc: dash_core_components
-
+  html: dash.html
+  dcc: dash.dcc
 app:
   dash.Dash:
     title: psidash

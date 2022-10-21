@@ -51,6 +51,7 @@ input_a:
         id: user-input-a
         type: number
         value: 3
+
 operator:
   dbc.Col:
     width: 1

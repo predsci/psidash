@@ -159,6 +159,9 @@ def load_app(name, filename):
     """Load the complete application - layout, signatures, callbacks"""
     conf = load_conf(filename)
     app = load_dash(name, conf['app'], conf.get('import'))
+    if 'layout' not in conf:
+        raise KeyError('Config needs a layout section')
+        
     app.layout = load_components(conf['layout'], conf.get('import'))
 
     if 'callbacks' in conf:

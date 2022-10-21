@@ -7,9 +7,9 @@ app:
     title: psidash basic
 
 
-# mycomponent:
-#   id: my-component # will reference later
-#   children: text goes here
+mycomponent:
+  id: my-component # will reference later
+  children: text goes here
 
 layout:
     html.Div:
@@ -23,10 +23,10 @@ layout:
           id: my-input
       - html.H5:
           id: my-output
-      # - html.Div: ${mycomponent} #dumps mycomponent keywords
+      - html.Div: ${mycomponent} #dumps mycomponent keywords
 
 callbacks:
-  pass_through: # can be named anything
+  render: # can be named anything
     input:
       - id: my-input
         attr: value
@@ -35,12 +35,12 @@ callbacks:
         attr: children
     callback: mycallbacks.pass_through
 
-  # render_again:
-  #   input:
-  #     - id: my-input
-  #       attr: value
-  #   output:
-  #     - id: ${mycomponent.id}
-  #       attr: children
-  #   callback: mycallbacks.pass_through
+  render_again:
+    input:
+      - id: my-input
+        attr: value
+    output:
+      - id: ${mycomponent.id}
+        attr: children
+    callback: mycallbacks.pass_through
 
