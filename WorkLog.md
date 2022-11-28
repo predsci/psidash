@@ -1,3 +1,4 @@
+* bugfix - load module aliases for callbacks
 ## 2022-10-21 11:59:37.480659: clock-out
 
 * docker setup, mathjax debugging

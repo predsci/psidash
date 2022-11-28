@@ -142,9 +142,10 @@ def get_callbacks(app, conf):
     return signatures
 
 def assign_callbacks(signatures, conf):
+    module_names = conf.get('import')
     for k, v in conf.items():
         if 'callback' in v:
-            func = load_class(v['callback'])
+            func = load_class(v['callback'], module_names=module_names)
             getattr(signatures, k)(func)
 
 def load_dash(name, conf, module_names = None):
